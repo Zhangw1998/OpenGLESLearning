@@ -1,11 +1,10 @@
-package com.zhangwww.opengles_learning
+package com.zhangwww.opengles_learning.ui.activity
 
-import android.app.ActivityManager
-import android.content.Context
-import android.opengl.GLSurfaceView
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
+import com.zhangwww.opengles_learning.gles.GLRender
+import com.zhangwww.opengles_learning.R
+import com.zhangwww.opengles_learning.gles.AirHockeyRender
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -15,6 +14,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         glSurfaceView.setEGLContextClientVersion(2)
         glSurfaceView.setRenderer(GLRender())
+        btn.setOnClickListener {
+            AirHockeyActivity.launch(this)
+        }
     }
 
     override fun onResume() {
