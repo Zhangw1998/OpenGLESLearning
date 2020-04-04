@@ -118,7 +118,7 @@ object GLUtil {
             .order(ByteOrder.nativeOrder())
             .asFloatBuffer()
             .put(coords)
-            .position(0) as FloatBuffer
+            .position(0) as FloatBuffer // 把位置设置为数据的开头
     }
 
     fun logVersionInfo() {
