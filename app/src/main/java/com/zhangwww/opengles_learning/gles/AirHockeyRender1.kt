@@ -12,44 +12,63 @@ import javax.microedition.khronos.opengles.GL10
 
 class AirHockeyRender1 : GLSurfaceView.Renderer {
 
+    /**
+     * 定义顶点以逆时针的顺序排列顶点，称为卷曲顺序(winding order)
+     */
+
     // 顶点属性(attribute)数组
-    private val tableVerticesWithTriangles = floatArrayOf(
-
-        //[x, y, r, g, b]
-
-        // Triangle Fan
-        0f, 0f, 1f, 1f, 1f,
-        -0.5f, -0.5f, 0.7f, 0.7f, 0.7f,
-        0.5f, -0.5f, 0.7f, 0.7f, 0.7f,
-        0.5f, 0.5f, 0.7f, 0.7f, 0.7f,
-        -0.5f, 0.5f, 0.7f, 0.7f, 0.7f,
-        -0.5f, -0.5f, 0.7f, 0.7f, 0.7f,
-
-        //center line
-        -0.5f, 0f, 1f, 0f, 0f,
-        0.5f, 0f, 0f, 0f, 1f,
-
-        //Mallets
-        0f, -0.25f, 0f, 0f, 1f,
-        0f, 0.25f, 1f, 0f, 0f
+    val tableVertices = floatArrayOf(
+        0f, 0f,
+        0f, 14f,
+        9f, 14f,
+        9f, 0f
     )
 
-    private val BYTES_PER_FLOAT = 4
+    private val tableVerticesWithTriangles = floatArrayOf(
+        //border
+        -0.6f, -0.6f,
+        0.6f, 0.6f,
+        -0.6f, 0.6f,
+
+        -0.6f, -0.6f,
+        0.6f, -0.6f,
+        0.6f, 0.6f,
+
+        //Triangle1
+        -0.5f, -0.5f,
+        0.5f, 0.5f,
+        -0.5f, 0.5f,
+
+        //Triangle2
+        -0.5f, -0.5f,
+        0.5f, -0.5f,
+        0.5f, 0.5f,
+
+        //center line
+        -0.5f, 0f,
+        0.5f, 0f,
+
+        //Mallets
+        0f, -0.25f,
+        0f, 0.25f,
+
+        //ball
+        -0.1f, -0.05f,
+        0.1f, 0.05f,
+        -0.1f, 0.05f,
+
+        -0.1f, -0.05f,
+        0.1f, -0.05f,
+        0.1f, 0.05f
+    )
 
     private val POSITION_COMPONENT_COUNT = 2
-
-    private val COLOR_COMPONENT_COUNT = 3
-
-
-    // 跨度
-    private val STRIDE = (POSITION_COMPONENT_COUNT + COLOR_COMPONENT_COUNT) * BYTES_PER_FLOAT
 
     private val vertexData: FloatBuffer = GLUtil.createFloatBuffer(tableVerticesWithTriangles)
 
     private var program = 0
     private var uColorLocation = 0
     private var aPositionLocation = 0
-    private var aColorLocation = 0
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         // 对应RGBA, 范围为[0f, 1f]
@@ -61,39 +80,16 @@ class AirHockeyRender1 : GLSurfaceView.Renderer {
 
         GLES20.glUseProgram(program)
 
-//        // 获取 uniform 位置
-//        uColorLocation = GLES20.glGetUniformLocation(program, U_COLOR)
-
-        aColorLocation = GLES20.glGetAttribLocation(program, A_COLOR)
-
+        // 获取 uniform 位置
+        uColorLocation = GLES20.glGetUniformLocation(program, U_COLOR)
         // 获取 attribute 位置
         aPositionLocation = GLES20.glGetAttribLocation(program, A_POSITION)
-
+        // 把位置设置为数据的开头
+//        vertexData.position(0) as FloatBuffer
         // 关联属性与顶点数据的数组
-        GLES20.glVertexAttribPointer(
-            aPositionLocation,
-            POSITION_COMPONENT_COUNT,
-            GLES20.GL_FLOAT,
-            false,
-            STRIDE,
-            vertexData
-        )
-
+        GLES20.glVertexAttribPointer(aPositionLocation, POSITION_COMPONENT_COUNT, GLES20.GL_FLOAT, false, 0, vertexData)
         // 使能顶点数组
         GLES20.glEnableVertexAttribArray(aPositionLocation)
-
-        vertexData.position(POSITION_COMPONENT_COUNT)
-
-        GLES20.glVertexAttribPointer(
-            aColorLocation,
-            COLOR_COMPONENT_COUNT,
-            GLES20.GL_FLOAT,
-            false,
-            STRIDE,
-            vertexData
-        )
-
-        GLES20.glEnableVertexAttribArray(aColorLocation)
     }
 
 
@@ -107,21 +103,29 @@ class AirHockeyRender1 : GLSurfaceView.Renderer {
         // clear the rendering surface
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
 
+        // draw border
+        GLES20.glUniform4f(uColorLocation, 0f, 1f, 0f, 1f)
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6)
+
         // draw ground
-//        GLES20.glUniform4f(uColorLocation, 1f, 1f, 1f, 1f)
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, 6)
+        GLES20.glUniform4f(uColorLocation, 1f, 1f, 1f, 1f)
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 6, 6)
 
         // draw line
-//        GLES20.glUniform4f(uColorLocation, 1f, 0f, 0f, 1f)
-        GLES20.glDrawArrays(GLES20.GL_LINES, 6, 2)
+        GLES20.glUniform4f(uColorLocation, 1f, 0f, 0f, 1f)
+        GLES20.glDrawArrays(GLES20.GL_LINES, 12, 2)
 
         // draw point
-//        GLES20.glUniform4f(uColorLocation, 0f, 0f, 1f, 1f)
-        GLES20.glDrawArrays(GLES20.GL_POINTS, 8, 1)
+        GLES20.glUniform4f(uColorLocation, 0f, 0f, 1f, 1f)
+        GLES20.glDrawArrays(GLES20.GL_POINTS, 14, 1)
 
         // draw point
-//        GLES20.glUniform4f(uColorLocation, 1f, 0f, 0f, 1f)
-        GLES20.glDrawArrays(GLES20.GL_POINTS, 9, 1)
+        GLES20.glUniform4f(uColorLocation, 1f, 0f, 0f, 1f)
+        GLES20.glDrawArrays(GLES20.GL_POINTS, 15, 1)
+
+        // draw ball
+        GLES20.glUniform4f(uColorLocation, 0f, 1f, 1f, 1f)
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 16, 6)
 
     }
 
@@ -129,7 +133,5 @@ class AirHockeyRender1 : GLSurfaceView.Renderer {
 
         private const val A_POSITION = "a_Position"
         private const val U_COLOR = "u_Color"
-
-        private const val A_COLOR = "a_Color"
     }
 }

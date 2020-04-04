@@ -2,31 +2,33 @@ package com.zhangwww.opengles_learning.ui.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.zhangwww.opengles_learning.gles.GLRender
-import com.zhangwww.opengles_learning.R
-import com.zhangwww.opengles_learning.gles.AirHockeyRender
-import kotlinx.android.synthetic.main.activity_main.*
+import android.view.LayoutInflater
+import com.zhangwww.opengles_learning.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var viewBinding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        glSurfaceView.setEGLContextClientVersion(2)
-        glSurfaceView.setRenderer(GLRender())
-        btn.setOnClickListener {
-            AirHockeyActivity.launch(this)
+        viewBinding = ActivityMainBinding.inflate(LayoutInflater.from(this))
+        setContentView(viewBinding.root)
+        initClicks()
+    }
+
+    private fun initClicks() {
+        viewBinding.btnFirstGl.setOnClickListener {
+            FirstGLActivity.launch(this)
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        glSurfaceView.onResume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        glSurfaceView.onPause()
+        viewBinding.btnAirHockey1.setOnClickListener {
+            AirHockeyActivity1.launch(this)
+        }
+        viewBinding.btnAirHockey2.setOnClickListener {
+            AirHockeyActivity2.launch(this)
+        }
+        viewBinding.btnAirHockey3.setOnClickListener {
+            AirHockeyActivity3.launch(this)
+        }
     }
 
 }

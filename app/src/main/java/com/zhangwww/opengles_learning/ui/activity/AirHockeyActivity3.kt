@@ -5,18 +5,17 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.zhangwww.opengles_learning.R
-import com.zhangwww.opengles_learning.gles.AirHockeyRender
-import com.zhangwww.opengles_learning.gles.AirHockeyRender1
+import com.zhangwww.opengles_learning.gles.AirHockeyRender2
+import com.zhangwww.opengles_learning.gles.AirHockeyRender3
 import kotlinx.android.synthetic.main.activity_air_hockey.*
 
-class AirHockeyActivity : AppCompatActivity() {
+class AirHockeyActivity3 : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_air_hockey)
         glSurfaceView.setEGLContextClientVersion(2)
-//        glSurfaceView.setRenderer(AirHockeyRender())
-        glSurfaceView.setRenderer(AirHockeyRender1())
+        glSurfaceView.setRenderer(AirHockeyRender3())
     }
 
     override fun onResume() {
@@ -32,7 +31,7 @@ class AirHockeyActivity : AppCompatActivity() {
     companion object {
 
         fun launch(ctx: Context) {
-            ctx.startActivity(Intent(ctx, AirHockeyActivity::class.java))
+            ctx.startActivity(Intent(ctx, AirHockeyActivity3::class.java))
         }
     }
 
