@@ -12,8 +12,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
-        <activity android:name=".ui.activity.FirstGLActivity"/>
-        <activity android:name=".ui.activity.AirHockeyActivity1" />
         <activity android:name=".ui.activity.MainActivity"
             android:theme="@style/Theme.MaterialComponents.Light">
             <intent-filter>
@@ -22,8 +20,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.activity.FirstGLActivity"/>
+        <activity android:name=".ui.activity.AirHockeyActivity1" />
         <activity android:name=".ui.activity.AirHockeyActivity3" />
         <activity android:name=".ui.activity.AirHockeyActivity2" />
+        <activity android:name=".ui.activity.AirHockeyActivity3D" />
+        <activity android:name=".ui.activity.AirHockeyActivity3D2" />
     </application>
 
 </manifest>

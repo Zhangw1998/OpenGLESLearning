@@ -5,4 +5,6 @@
     <string name="air_hockey_1">AirHockey1</string>
     <string name="air_hockey_2">AirHockey2</string>
     <string name="air_hockey_3">AirHockey3</string>
+    <string name="air_hockey_3d">AirHockey3D</string>
+    <string name="air_hockey_3d_2">AirHockey3D_2</string>
 </resources>

@@ -29,6 +29,12 @@ class MainActivity : AppCompatActivity() {
         viewBinding.btnAirHockey3.setOnClickListener {
             AirHockeyActivity3.launch(this)
         }
+        viewBinding.btnAirHockey3d.setOnClickListener {
+            AirHockeyActivity3D.launch(this)
+        }
+        viewBinding.btnAirHockey3d2.setOnClickListener {
+            AirHockeyActivity3D2.launch(this)
+        }
     }
 
 }
