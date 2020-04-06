@@ -1,4 +1,4 @@
-package com.zhangwww.opengles_learning.gles
+package com.zhangwww.opengles_learning.gles.render
 
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView

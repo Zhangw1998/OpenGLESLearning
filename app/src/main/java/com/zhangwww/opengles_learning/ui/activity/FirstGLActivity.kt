@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
 import com.zhangwww.opengles_learning.databinding.ActivityFirstGLBinding
-import com.zhangwww.opengles_learning.gles.GLRender
+import com.zhangwww.opengles_learning.gles.render.GLRender
 
 class FirstGLActivity : AppCompatActivity() {
 

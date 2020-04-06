@@ -1,11 +1,11 @@
-package com.zhangwww.opengles_learning.gles
+package com.zhangwww.opengles_learning.gles.render
 
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
-import android.util.Log
 import com.zhangwww.opengles_learning.R
 import com.zhangwww.opengles_learning.extensions.appContext
+import com.zhangwww.opengles_learning.gles.GLUtil
 import com.zhangwww.opengles_learning.utils.MatrixHelper
 import com.zhangwww.opengles_learning.utils.readShaderFromResource
 import java.nio.FloatBuffer

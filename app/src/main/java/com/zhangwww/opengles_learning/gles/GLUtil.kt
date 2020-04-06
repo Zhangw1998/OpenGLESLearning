@@ -8,7 +8,7 @@ import java.nio.FloatBuffer
 
 object GLUtil {
 
-    private val TAG = this.javaClass.simpleName
+    private const val TAG = "GLUtil"
 
     private const val BYTES_PER_FLOAT = 4
 

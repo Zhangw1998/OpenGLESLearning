@@ -5,8 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.zhangwww.opengles_learning.R
-import com.zhangwww.opengles_learning.gles.AirHockeyRender2
-import com.zhangwww.opengles_learning.gles.AirHockeyRender3
+import com.zhangwww.opengles_learning.gles.render.AirHockeyRender3
 import kotlinx.android.synthetic.main.activity_air_hockey.*
 
 class AirHockeyActivity3 : AppCompatActivity() {

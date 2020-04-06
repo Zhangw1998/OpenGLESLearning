@@ -35,6 +35,9 @@ class MainActivity : AppCompatActivity() {
         viewBinding.btnAirHockey3d2.setOnClickListener {
             AirHockeyActivity3D2.launch(this)
         }
+        viewBinding.btnAirHockeyTexture.setOnClickListener {
+            AirHockeyTexturedActivity.launch(this)
+        }
     }
 
 }

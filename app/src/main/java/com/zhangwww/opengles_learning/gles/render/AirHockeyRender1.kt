@@ -1,9 +1,10 @@
-package com.zhangwww.opengles_learning.gles
+package com.zhangwww.opengles_learning.gles.render
 
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import com.zhangwww.opengles_learning.R
 import com.zhangwww.opengles_learning.extensions.appContext
+import com.zhangwww.opengles_learning.gles.GLUtil
 import com.zhangwww.opengles_learning.utils.readShaderFromResource
 import java.nio.FloatBuffer
 import javax.microedition.khronos.egl.EGLConfig
@@ -64,7 +65,10 @@ class AirHockeyRender1 : GLSurfaceView.Renderer {
 
     private val POSITION_COMPONENT_COUNT = 2
 
-    private val vertexData: FloatBuffer = GLUtil.createFloatBuffer(tableVerticesWithTriangles)
+    private val vertexData: FloatBuffer =
+        GLUtil.createFloatBuffer(
+            tableVerticesWithTriangles
+        )
 
     private var program = 0
     private var uColorLocation = 0
@@ -76,14 +80,21 @@ class AirHockeyRender1 : GLSurfaceView.Renderer {
 
         val vertexShader = readShaderFromResource(appContext, R.raw.simple_vertex_shader1)
         val fragmentShader = readShaderFromResource(appContext, R.raw.simple_fragment_shader1)
-        program = GLUtil.createProgram(vertexShader, fragmentShader)
+        program = GLUtil.createProgram(
+            vertexShader,
+            fragmentShader
+        )
 
         GLES20.glUseProgram(program)
 
         // 获取 uniform 位置
-        uColorLocation = GLES20.glGetUniformLocation(program, U_COLOR)
+        uColorLocation = GLES20.glGetUniformLocation(program,
+            U_COLOR
+        )
         // 获取 attribute 位置
-        aPositionLocation = GLES20.glGetAttribLocation(program, A_POSITION)
+        aPositionLocation = GLES20.glGetAttribLocation(program,
+            A_POSITION
+        )
         // 把位置设置为数据的开头
 //        vertexData.position(0) as FloatBuffer
         // 关联属性与顶点数据的数组

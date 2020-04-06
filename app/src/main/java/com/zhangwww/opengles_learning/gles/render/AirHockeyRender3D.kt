@@ -1,46 +1,46 @@
-package com.zhangwww.opengles_learning.gles
+package com.zhangwww.opengles_learning.gles.render
 
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
-import android.util.Log
 import com.zhangwww.opengles_learning.R
 import com.zhangwww.opengles_learning.extensions.appContext
+import com.zhangwww.opengles_learning.gles.GLUtil
 import com.zhangwww.opengles_learning.utils.readShaderFromResource
 import java.nio.FloatBuffer
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
 
-class AirHockeyRender3 : GLSurfaceView.Renderer {
+class AirHockeyRender3D : GLSurfaceView.Renderer {
 
     // 顶点属性(attribute)数组
     private val tableVerticesWithTriangles = floatArrayOf(
 
-        //[x, y, r, g, b]
+        //[x, y, z, w, r, g, b]
 
         // Triangle Fan
-        0f, 0f, 1f, 1f, 1f,
-        -0.5f, -0.8f, 0.7f, 0.7f, 0.7f,
-        0.5f, -0.8f, 0.7f, 0.7f, 0.7f,
-        0.5f, 0.8f, 0.7f, 0.7f, 0.7f,
-        -0.5f, 0.8f, 0.7f, 0.7f, 0.7f,
-        -0.5f, -0.8f, 0.7f, 0.7f, 0.7f,
+           0f,    0f, 0f, 1.5f,   1f,   1f,   1f,
+        -0.5f, -0.8f, 0f,   1f, 0.7f, 0.7f, 0.7f,
+         0.5f, -0.8f, 0f,   1f, 0.7f, 0.7f, 0.7f,
+         0.5f,  0.8f, 0f,   2f, 0.7f, 0.7f, 0.7f,
+        -0.5f,  0.8f, 0f,   2f, 0.7f, 0.7f, 0.7f,
+        -0.5f, -0.8f, 0f,   1f, 0.7f, 0.7f, 0.7f,
 
         //center line
-        -0.5f, 0f, 1f, 0f, 0f,
-        0.5f, 0f, 0f, 0f, 1f,
+        -0.5f, 0f, 0f, 1.5f, 1f, 0f, 0f,
+         0.5f, 0f, 0f, 1.5f, 1f, 0f, 0f,
 
         //Mallets
-        0f, -0.4f, 0f, 0f, 1f,
-        0f, 0.4f, 1f, 0f, 0f
+        0f, -0.4f, 0f, 1.25f, 0f, 0f, 1f,
+        0f,  0.4f, 0f, 1.75f, 1f, 0f, 0f
     )
 
     private val projectionMatrix = FloatArray(16)
 
     private val BYTES_PER_FLOAT = 4
 
-    private val POSITION_COMPONENT_COUNT = 2
+    private val POSITION_COMPONENT_COUNT = 4
 
     private val COLOR_COMPONENT_COUNT = 3
 
@@ -48,7 +48,10 @@ class AirHockeyRender3 : GLSurfaceView.Renderer {
     // 跨度
     private val STRIDE = (POSITION_COMPONENT_COUNT + COLOR_COMPONENT_COUNT) * BYTES_PER_FLOAT
 
-    private val vertexData: FloatBuffer = GLUtil.createFloatBuffer(tableVerticesWithTriangles)
+    private val vertexData: FloatBuffer =
+        GLUtil.createFloatBuffer(
+            tableVerticesWithTriangles
+        )
 
     private var program = 0
     private var aPositionLocation = 0
@@ -61,16 +64,25 @@ class AirHockeyRender3 : GLSurfaceView.Renderer {
 
         val vertexShader = readShaderFromResource(appContext, R.raw.simple_vertex_shader3)
         val fragmentShader = readShaderFromResource(appContext, R.raw.simple_fragment_shader3)
-        program = GLUtil.createProgram(vertexShader, fragmentShader)
+        program = GLUtil.createProgram(
+            vertexShader,
+            fragmentShader
+        )
 
         GLES20.glUseProgram(program)
 
         // 获取 attribute 位置
-        aPositionLocation = GLES20.glGetAttribLocation(program, A_POSITION)
+        aPositionLocation = GLES20.glGetAttribLocation(program,
+            A_POSITION
+        )
 
-        aColorLocation = GLES20.glGetAttribLocation(program, A_COLOR)
+        aColorLocation = GLES20.glGetAttribLocation(program,
+            A_COLOR
+        )
 
-        uMatrixLocation = GLES20.glGetUniformLocation(program, U_MATRIX)
+        uMatrixLocation = GLES20.glGetUniformLocation(program,
+            U_MATRIX
+        )
 
         // 关联属性与顶点数据的数组
         GLES20.glVertexAttribPointer(
