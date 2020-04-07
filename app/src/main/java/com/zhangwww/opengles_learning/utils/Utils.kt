@@ -52,6 +52,7 @@ fun readShaderFromResource(context: Context, resourceId: Int): String {
  */
 fun loadTexture(context: Context, resourceId: Int): Int {
     val textureObjectId = IntArray(1)
+    // 创建一个纹理对象
     glGenTextures(1, textureObjectId, 0)
     if (textureObjectId[0] == 0) {
         Log.w(TAG, "Could not generate a new OpenGL texture object")
@@ -65,12 +66,19 @@ fun loadTexture(context: Context, resourceId: Int): Int {
         glDeleteTextures(1, textureObjectId, 0)
         return 0
     }
+    // 绑定纹理对象
     glBindTexture(GL_TEXTURE_2D, textureObjectId[0])
+    // 纹理过滤模式: 最近领过滤、双线性过滤、MIP贴图、三线性过滤
+    // 设置缩小过滤器
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR)
+    // 设置放大过滤器
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+    // 加载Bitmap到OpenGL中
     texImage2D(GL_TEXTURE_2D, 0, bitmap, 0)
     bitmap.recycle()
+    // 生成MIP贴图
     glGenerateMipmap(GL_TEXTURE_2D)
+    // 解除纹理的绑定，避免用其他纹理方法而改变这个纹理
     glBindTexture(GL_TEXTURE_2D, 0)
     return textureObjectId[0]
 }
