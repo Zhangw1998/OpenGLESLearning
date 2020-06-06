@@ -1,6 +1,6 @@
-package com.zhangwww.opengles_learning.gles
+package com.zhangwww.basemodule.opengles
 
-import android.opengl.GLES20
+import android.opengl.GLES20.*
 import android.util.Log
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -13,106 +13,147 @@ object GLUtil {
     private const val BYTES_PER_FLOAT = 4
 
     /**
-     * 使用OpenGL程序的基本流程
-     * 1.编译着色器
-     * 2.创建OpenGL程序
-     * 3.链接着色器
-     * 4.验证OpenGL程序
+     * 创建OpenGL程序
+     *
+     * <p>
+     *     1.编译着色器
+     *     2.创建OpenGL程序
+     *     3.链接着色器
+     *     4.验证OpenGL程序
+     * </p>
+     *
+     * @param vertexShaderCode 顶点着色器代码
+     * @param fragmentShaderCode 片段着色器代码
+     * @return 返回OpenGL程序的句柄
      */
     fun createProgram(vertexShaderCode: String, fragmentShaderCode: String): Int {
-        // 编译
+        // 编译着色器
         val vertexShaderId = compileVertexShader(vertexShaderCode)
         val fragmentShaderId = compileFragmentShader(fragmentShaderCode)
-        // 链接
+        // 链接着色器
         val programId = linkProgram(vertexShaderId, fragmentShaderId)
-        // 验证
+        // 验证OpenGL程序
         if (validateProgram(programId)) {
             return programId
         } else {
-            Log.e(TAG, GLES20.glGetProgramInfoLog(programId))
+            Log.e(TAG, glGetProgramInfoLog(programId))
             throw RuntimeException("Create OpenGL program failed")
         }
     }
 
-    // 编译顶点着色器
+    /**
+     * 编译顶点着色器
+     * @param shaderCode 顶点着色器程序的字符串
+     * @return 顶点着色器的句柄
+     */
     private fun compileVertexShader(shaderCode: String): Int {
-        return compileShader(GLES20.GL_VERTEX_SHADER, shaderCode)
+        return compileShader(GL_VERTEX_SHADER, shaderCode)
     }
 
-    // 编译片段着色器
+    /**
+     * 编译片段着色器
+     * @param shaderCode 片段着色器程序的字符串
+     * @return 片段着色器的句柄
+     */
     private fun compileFragmentShader(shaderCode: String): Int {
-        return compileShader(GLES20.GL_FRAGMENT_SHADER, shaderCode)
+        return compileShader(GL_FRAGMENT_SHADER, shaderCode)
     }
 
     // 创建OpenGL程序并链接着色器
+    /**
+     * 创建OpenGL程序并链接着色器
+     * @param vertexShaderId 顶点着色器的句柄
+     * @param fragmentShaderId 片段着色器的句柄
+     * @return OpenGL程序的句柄
+     */
     private fun linkProgram(vertexShaderId: Int, fragmentShaderId: Int): Int {
-        val programId = GLES20.glCreateProgram()
+        val programId = glCreateProgram()
         // 创建程序失败
         if (programId == 0) return 0
         // 链接顶点着色器
-        GLES20.glAttachShader(programId, vertexShaderId)
+        glAttachShader(programId, vertexShaderId)
         // 链接片段着色器
-        GLES20.glAttachShader(programId, fragmentShaderId)
+        glAttachShader(programId, fragmentShaderId)
         // 链接OpenGL程序
-        GLES20.glLinkProgram(programId)
+        glLinkProgram(programId)
         // 验证链接结果
         val linkStatus = IntArray(1)
-        GLES20.glGetProgramiv(programId, GLES20.GL_LINK_STATUS, linkStatus, 0)
+        glGetProgramiv(programId, GL_LINK_STATUS, linkStatus, 0)
         if (linkStatus[0] == 0) {
             // 链接失败打印失败信息并删除OpenGL程序
             Log.e(TAG, "Could not link program: ")
-            Log.e(TAG, GLES20.glGetProgramInfoLog(programId))
-            GLES20.glDeleteProgram(programId)
+            Log.e(TAG, glGetProgramInfoLog(programId))
+            glDeleteProgram(programId)
             return 0
         }
         return programId
     }
 
-    // 验证OpenGL程序是否可用
+    /**
+     * 验证OpenGL程序是否可用
+     * @param programId OpenGL程序的句柄
+     * @return 程序是否可以使用
+     */
     private fun validateProgram(programId: Int): Boolean {
-        GLES20.glValidateProgram(programId)
+        glValidateProgram(programId)
         val validateStatus = IntArray(1)
-        GLES20.glGetProgramiv(programId, GLES20.GL_VALIDATE_STATUS, validateStatus, 0)
+        glGetProgramiv(programId, GL_VALIDATE_STATUS, validateStatus, 0)
         return validateStatus[0] != 0
     }
 
-    // 根据类型编译着色器
+    /**
+     * 根据类型编译着色器
+     * @param shaderType 着色器类型 {GL_VERTEX_SHADER | GL_FRAGMENT_SHADER}
+     * @param shaderCode 着色器代码
+     * @return 着色器的句柄
+     */
     private fun compileShader(shaderType: Int, shaderCode: String): Int {
         // 根据不同的类型创建着色器id
-        val shaderId = GLES20.glCreateShader(shaderType)
+        val shaderId = glCreateShader(shaderType)
         checkGlError("glCreateShader type=$shaderType")
         // 连接着色器id和着色器程序内容
-        GLES20.glShaderSource(shaderId, shaderCode)
+        glShaderSource(shaderId, shaderCode)
         // 编译着色器
-        GLES20.glCompileShader(shaderId)
+        glCompileShader(shaderId)
         // 验证编译结果
         val compileStatus = IntArray(1)
-        GLES20.glGetShaderiv(shaderId, GLES20.GL_COMPILE_STATUS, compileStatus, 0)
+        glGetShaderiv(shaderId, GL_COMPILE_STATUS, compileStatus, 0)
         if (compileStatus[0] == 0) {
             // 编译失败打印相关信息并删除
             Log.e(TAG, "Could not compile shader $shaderType:")
             // 取出着色器信息日志
-            Log.e(TAG, GLES20.glGetShaderInfoLog(shaderId))
-            GLES20.glDeleteShader(shaderId)
+            Log.e(TAG, glGetShaderInfoLog(shaderId))
+            glDeleteShader(shaderId)
             return 0
         }
         return shaderId
     }
 
+    /**
+     * 检查OpenGL环境中的错误
+     */
     private fun checkGlError(op: String) {
-        val error = GLES20.glGetError()
-        if (error != GLES20.GL_NO_ERROR) {
+        val error = glGetError()
+        if (error != GL_NO_ERROR) {
             val msg = "$op: glError 0x ${Integer.toHexString(error)}"
             throw RuntimeException(msg)
         }
     }
 
+    /**
+     * 检查OpenGL中的参数
+     */
     fun checkLocation(location: Int, label: String) {
         if (location < 0) {
             throw RuntimeException("Unable to locate '$label' in program")
         }
     }
 
+    /**
+     * 根据坐标创建FloatBuffer
+     * @param coords Float类型的坐标
+     * @return 创建的FloatBuffer
+     */
     fun createFloatBuffer(coords: FloatArray): FloatBuffer {
         return ByteBuffer.allocateDirect(coords.size * BYTES_PER_FLOAT)
             .order(ByteOrder.nativeOrder())
@@ -121,9 +162,12 @@ object GLUtil {
             .position(0) as FloatBuffer // 把位置设置为数据的开头
     }
 
+    /**
+     * 打印OpenGLES 版本信息
+     */
     fun logVersionInfo() {
-        Log.e(TAG, "vendor  : " + GLES20.glGetString(GLES20.GL_VENDOR))
-        Log.e(TAG, "renderer: " + GLES20.glGetString(GLES20.GL_RENDERER))
-        Log.e(TAG, "version : " + GLES20.glGetString(GLES20.GL_VERSION))
+        Log.e(TAG, "vendor  : " + glGetString(GL_VENDOR))
+        Log.e(TAG, "renderer: " + glGetString(GL_RENDERER))
+        Log.e(TAG, "version : " + glGetString(GL_VERSION))
     }
 }

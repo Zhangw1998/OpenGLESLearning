@@ -4,8 +4,7 @@ import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import com.zhangwww.opengles_learning.R
 import com.zhangwww.opengles_learning.extensions.appContext
-import com.zhangwww.opengles_learning.gles.GLUtil
-import com.zhangwww.opengles_learning.utils.readShaderFromResource
+import com.zhangwww.basemodule.opengles.readShaderFromResource
 import java.nio.FloatBuffer
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
@@ -78,8 +77,16 @@ class AirHockeyRender1 : GLSurfaceView.Renderer {
         // 对应RGBA, 范围为[0f, 1f]
         GLES20.glClearColor(0f, 0f, 0f, 0f)
 
-        val vertexShader = readShaderFromResource(appContext, R.raw.simple_vertex_shader1)
-        val fragmentShader = readShaderFromResource(appContext, R.raw.simple_fragment_shader1)
+        val vertexShader =
+            readShaderFromResource(
+                appContext,
+                R.raw.simple_vertex_shader1
+            )
+        val fragmentShader =
+            readShaderFromResource(
+                appContext,
+                R.raw.simple_fragment_shader1
+            )
         program = GLUtil.createProgram(
             vertexShader,
             fragmentShader

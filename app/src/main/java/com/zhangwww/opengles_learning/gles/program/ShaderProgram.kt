@@ -2,9 +2,8 @@ package com.zhangwww.opengles_learning.gles.program
 
 import android.content.Context
 import android.opengl.GLES20
-import com.zhangwww.opengles_learning.CommonApplication
-import com.zhangwww.opengles_learning.gles.GLUtil
-import com.zhangwww.opengles_learning.utils.readShaderFromResource
+import com.zhangwww.basemodule.opengles.GLUtil
+import com.zhangwww.basemodule.opengles.readShaderFromResource
 
 
 open class ShaderProgram(
@@ -16,8 +15,16 @@ open class ShaderProgram(
     val program: Int
 
     init {
-        val vertexShader = readShaderFromResource(context, vertexShaderResourceId)
-        val fragmentShader = readShaderFromResource(context, fragmentShaderResourceId)
+        val vertexShader =
+            readShaderFromResource(
+                context,
+                vertexShaderResourceId
+            )
+        val fragmentShader =
+            readShaderFromResource(
+                context,
+                fragmentShaderResourceId
+            )
         program = GLUtil.createProgram(vertexShader, fragmentShader)
     }
 

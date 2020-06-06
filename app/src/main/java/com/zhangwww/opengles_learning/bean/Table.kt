@@ -3,7 +3,7 @@ package com.zhangwww.opengles_learning.bean
 import android.opengl.GLES20.GL_TRIANGLE_FAN
 import android.opengl.GLES20.glDrawArrays
 import com.zhangwww.opengles_learning.gles.program.TextureShaderProgram
-import com.zhangwww.opengles_learning.utils.BYTES_PER_FLOAT
+import com.zhangwww.basemodule.opengles.BYTES_PER_FLOAT
 
 class Table {
 

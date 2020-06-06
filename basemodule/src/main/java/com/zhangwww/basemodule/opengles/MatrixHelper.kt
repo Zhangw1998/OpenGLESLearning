@@ -1,4 +1,4 @@
-package com.zhangwww.opengles_learning.utils
+package com.zhangwww.basemodule.opengles
 
 import kotlin.math.PI
 import kotlin.math.tan

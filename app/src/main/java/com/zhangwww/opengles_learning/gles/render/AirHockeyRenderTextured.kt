@@ -1,6 +1,5 @@
 package com.zhangwww.opengles_learning.gles.render
 
-import android.opengl.GLES20
 import android.opengl.GLES20.*
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
@@ -10,8 +9,8 @@ import com.zhangwww.opengles_learning.bean.Mallet
 import com.zhangwww.opengles_learning.bean.Table
 import com.zhangwww.opengles_learning.gles.program.ColorShaderProgram
 import com.zhangwww.opengles_learning.gles.program.TextureShaderProgram
-import com.zhangwww.opengles_learning.utils.MatrixHelper
-import com.zhangwww.opengles_learning.utils.loadTexture
+import com.zhangwww.basemodule.opengles.MatrixHelper
+import com.zhangwww.basemodule.opengles.loadTexture
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
@@ -38,7 +37,10 @@ class AirHockeyRenderTextured : GLSurfaceView.Renderer {
         textureProgram = TextureShaderProgram(CommonApplication.appContext)
         colorProgram = ColorShaderProgram(CommonApplication.appContext)
 
-        texture = loadTexture(CommonApplication.appContext, R.drawable.air_hockey_surface)
+        texture = loadTexture(
+            CommonApplication.appContext,
+            R.drawable.air_hockey_surface
+        )
     }
 
 

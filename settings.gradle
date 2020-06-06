@@ -1,2 +1,4 @@
+include ':app:chapter1'
+include ':basemodule'
 rootProject.name='OpenGLES_Learning'
 include ':app'

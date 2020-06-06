@@ -1,4 +1,4 @@
-package com.zhangwww.opengles_learning.utils
+package com.zhangwww.basemodule.opengles
 
 import android.app.ActivityManager
 import android.content.Context
@@ -17,8 +17,10 @@ const val BYTES_PER_FLOAT = 4
 
 /**
  * 判断是否支持OpenGLES2.0
+ * @param context 上下文对象
+ * @return 是否支持OpenGLES2.0 (一般都支持)
  */
-fun isSupportOpenGLes20(context: Context): Boolean {
+fun isSupportOpenGLES20(context: Context): Boolean {
     val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
     val configurationInfo = activityManager.deviceConfigurationInfo
     return configurationInfo.reqGlEsVersion >= 0x20000
@@ -26,6 +28,9 @@ fun isSupportOpenGLes20(context: Context): Boolean {
 
 /**
  * 从raw目录读取shader文件
+ * @param context 上下文对象
+ * @param resourceId shader文件的资源id
+ * @return 返回shader程序的字符串
  */
 fun readShaderFromResource(context: Context, resourceId: Int): String {
     val body = StringBuilder()
@@ -43,12 +48,14 @@ fun readShaderFromResource(context: Context, resourceId: Int): String {
     } catch (e: Resources.NotFoundException) {
         throw RuntimeException("Resource not found: $resourceId", e)
     }
-    Log.e("zhang", body.toString())
     return body.toString()
 }
 
 /**
  * 加载Resources图像文件到纹理中
+ * @param context 上下文对象
+ * @param resourceId 图片文件的资源id
+ * @return 纹理对象的句柄
  */
 fun loadTexture(context: Context, resourceId: Int): Int {
     val textureObjectId = IntArray(1)
