@@ -3,6 +3,7 @@ package com.zhangwww.opengles_learning.gles.render
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
+import com.zhangwww.basemodule.opengles.GLUtil
 import com.zhangwww.opengles_learning.R
 import com.zhangwww.opengles_learning.extensions.appContext
 import com.zhangwww.basemodule.opengles.readShaderFromResource

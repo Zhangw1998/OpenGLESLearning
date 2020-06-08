@@ -2,6 +2,7 @@ package com.zhangwww.opengles_learning.gles.render
 
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
+import com.zhangwww.basemodule.opengles.GLUtil
 import com.zhangwww.opengles_learning.R
 import com.zhangwww.opengles_learning.extensions.appContext
 import com.zhangwww.basemodule.opengles.readShaderFromResource
@@ -57,31 +58,16 @@ class AirHockeyRender2 : GLSurfaceView.Renderer {
         // 对应RGBA, 范围为[0f, 1f]
         GLES20.glClearColor(0f, 0f, 0f, 0f)
 
-        val vertexShader =
-            readShaderFromResource(
-                appContext,
-                R.raw.simple_vertex_shader2
-            )
-        val fragmentShader =
-            readShaderFromResource(
-                appContext,
-                R.raw.simple_fragment_shader2
-            )
-        program = GLUtil.createProgram(
-            vertexShader,
-            fragmentShader
-        )
+        val vertexShader = readShaderFromResource(appContext, R.raw.simple_vertex_shader2)
+        val fragmentShader = readShaderFromResource(appContext, R.raw.simple_fragment_shader2)
+        program = GLUtil.createProgram(vertexShader, fragmentShader)
 
         GLES20.glUseProgram(program)
 
-        aColorLocation = GLES20.glGetAttribLocation(program,
-            A_COLOR
-        )
+        aColorLocation = GLES20.glGetAttribLocation(program, A_COLOR)
 
         // 获取 attribute 位置
-        aPositionLocation = GLES20.glGetAttribLocation(program,
-            A_POSITION
-        )
+        aPositionLocation = GLES20.glGetAttribLocation(program, A_POSITION)
 
         // 关联属性与顶点数据的数组
         GLES20.glVertexAttribPointer(

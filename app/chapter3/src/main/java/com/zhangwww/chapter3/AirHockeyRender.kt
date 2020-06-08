@@ -1,4 +1,4 @@
-package com.zhangwww.chapter2
+package com.zhangwww.chapter3
 
 import android.opengl.GLES20
 import android.opengl.GLES20.*
@@ -6,6 +6,7 @@ import android.opengl.GLSurfaceView
 import android.util.Log
 import com.zhangwww.basemodule.opengles.GLUtil
 import com.zhangwww.basemodule.opengles.readShaderFromResource
+import com.zhangwww.chapter3.App.Companion.appContext
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
@@ -16,24 +17,22 @@ class AirHockeyRender : GLSurfaceView.Renderer{
 
     // 顶点逆时针排序称为卷曲顺序
     private val tableVerticesWithTriangles = floatArrayOf(
-
-        //Triangle1
-        -0.5f, -0.5f,
-        0.5f, 0.5f,
-        -0.5f, 0.5f,
-
-        //Triangle2
-        -0.5f, -0.5f,
-        0.5f, -0.5f,
-        0.5f, 0.5f,
+        // 加入颜色属性[X, Y, R, G, B]
+        // Triangle Fan
+        0f, 0f, 1f, 1f, 1f,
+        -0.5f, -0.5f, 0.7f, 0.7f, 0.7f,
+        0.5f, -0.5f, 0.7f, 0.7f, 0.7f,
+        0.5f, 0.5f, 0.7f, 0.7f, 0.7f,
+        -0.5f, 0.5f, 0.7f, 0.7f, 0.7f,
+        -0.5f, -0.5f, 0.7f, 0.7f, 0.7f,
 
         //center line
-        -0.5f, 0f,
-        0.5f, 0f,
+        -0.5f, 0f, 1f, 0f, 0f,
+        0.5f, 0f, 1f, 0f, 0f,
 
         //Mallets
-        0f, -0.25f,
-        0f, 0.25f
+        0f, -0.25f, 0f, 0f, 1f,
+        0f, 0.25f, 1f, 0f, 0f
     )
 
     private val vertexData: FloatBuffer
@@ -47,34 +46,36 @@ class AirHockeyRender : GLSurfaceView.Renderer{
             // 转换为FloatBuffer类型
             .asFloatBuffer()
             .put(tableVerticesWithTriangles)
-//        vertexData = GLUtil.createFloatBuffer(tableVerticesWithTriangles)
     }
 
     private var programId = 0
-    private var uColorLocation = 0
+    private var aColorLocation = 0
     private var aPositionLocation = 0
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         Log.d(TAG, "onSurfaceCreated")
         // 设置清空屏幕时用的颜色
         glClearColor(0f, 0f, 0f, 0f)
-
         // 创建OpenGL程序并绑定数据
         val vertexShader = readShaderFromResource(appContext, R.raw.simple_vertex_shader)
         val fragmentShader = readShaderFromResource(appContext, R.raw.simple_fragment_shader)
         programId = GLUtil.createProgram(vertexShader, fragmentShader)
         // 使用该OpenGL程序
         glUseProgram(programId)
-        // 获取 uniform 位置
-        uColorLocation = glGetUniformLocation(programId, U_COLOR)
+        // 获取 attribute 位置
+        aColorLocation = glGetAttribLocation(programId, A_COLOR)
         // 获取 attribute 位置
         aPositionLocation = glGetAttribLocation(programId, A_POSITION)
         // 把位置设置为数据的开头
         vertexData.position(0)
         // 关联属性与顶点数据的数组
-        glVertexAttribPointer(aPositionLocation, POSITION_COMPONENT_COUNT, GL_FLOAT, false, 0, vertexData)
+        glVertexAttribPointer(aPositionLocation, POSITION_COMPONENT_COUNT, GL_FLOAT, false, STRIDE, vertexData)
         // 使能顶点数组
         glEnableVertexAttribArray(aPositionLocation)
+
+        vertexData.position(POSITION_COMPONENT_COUNT)
+        glVertexAttribPointer(aColorLocation, COLOR_COMPONENT_COUNT, GL_FLOAT, false, STRIDE, vertexData)
+        glEnableVertexAttribArray(aColorLocation)
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
@@ -88,19 +89,13 @@ class AirHockeyRender : GLSurfaceView.Renderer{
         Log.d(TAG, "onDrawFrame")
         // 清空屏幕
         glClear(GL_COLOR_BUFFER_BIT)
-        // 设置颜色
-        glUniform4f(uColorLocation, 1f, 1f, 1f, 1f)
         // 绘制三角形
-        glDrawArrays(GL_TRIANGLES, 0, 6)
+        glDrawArrays(GL_TRIANGLE_FAN, 0, 6)
         // 绘制直线
-        glUniform4f(uColorLocation, 1f, 0f, 0f, 1f)
         glDrawArrays(GL_LINES, 6, 2)
         // 绘制点
-        glUniform4f(uColorLocation, 0f, 1f, 0f, 1f)
         glDrawArrays(GL_POINTS, 8, 1)
-        glUniform4f(uColorLocation, 0f, 0f, 1f, 1f)
         glDrawArrays(GL_POINTS, 9, 1)
-
     }
 
     companion object {
@@ -112,6 +107,9 @@ class AirHockeyRender : GLSurfaceView.Renderer{
 
         // shader程序中的变量，需要完全对应
         private const val A_POSITION = "a_Position"
-        private const val U_COLOR = "u_Color"
+        private const val A_COLOR = "a_Color"
+
+        private const val COLOR_COMPONENT_COUNT = 3
+        private const val STRIDE = (POSITION_COMPONENT_COUNT + COLOR_COMPONENT_COUNT) * BYTES_PER_FLOAT
     }
 }
