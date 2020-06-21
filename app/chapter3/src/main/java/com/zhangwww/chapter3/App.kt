@@ -7,11 +7,11 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        appContext = applicationContext
+        context = applicationContext
     }
 
     companion object {
-        lateinit var appContext: Context
+        lateinit var context: Context
     }
 
 }

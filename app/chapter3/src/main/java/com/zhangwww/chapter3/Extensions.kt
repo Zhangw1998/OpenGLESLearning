@@ -1,7 +1,6 @@
-package com.zhangwww.chapter2
+package com.zhangwww.chapter3
 
 import android.content.Context
-import com.zhangwww.chapter3.App
 
 val Any.appContext: Context
-    get() = App.appContext
+    get() = App.context

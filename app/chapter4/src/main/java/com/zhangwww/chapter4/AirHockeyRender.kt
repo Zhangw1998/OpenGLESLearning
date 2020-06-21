@@ -1,7 +1,8 @@
-package com.zhangwww.chapter3
+package com.zhangwww.chapter4
 
 import android.opengl.GLES20.*
 import android.opengl.GLSurfaceView
+import android.opengl.Matrix
 import android.util.Log
 import com.zhangwww.basemodule.opengles.GLUtil
 import com.zhangwww.basemodule.opengles.readShaderFromResource
@@ -18,22 +19,24 @@ class AirHockeyRender : GLSurfaceView.Renderer{
         // 加入颜色属性[X, Y, R, G, B]
         // Triangle Fan
         0f, 0f, 1f, 1f, 1f,
-        -0.5f, -0.5f, 0.7f, 0.7f, 0.7f,
-        0.5f, -0.5f, 0.7f, 0.7f, 0.7f,
-        0.5f, 0.5f, 0.7f, 0.7f, 0.7f,
-        -0.5f, 0.5f, 0.7f, 0.7f, 0.7f,
-        -0.5f, -0.5f, 0.7f, 0.7f, 0.7f,
+        -0.5f, -0.8f, 0.7f, 0.7f, 0.7f,
+        0.5f, -0.8f, 0.7f, 0.7f, 0.7f,
+        0.5f, 0.8f, 0.7f, 0.7f, 0.7f,
+        -0.5f, 0.8f, 0.7f, 0.7f, 0.7f,
+        -0.5f, -0.8f, 0.7f, 0.7f, 0.7f,
 
         //center line
         -0.5f, 0f, 1f, 0f, 0f,
         0.5f, 0f, 1f, 0f, 0f,
 
         //Mallets
-        0f, -0.25f, 0f, 0f, 1f,
-        0f, 0.25f, 1f, 0f, 0f
+        0f, -0.4f, 0f, 0f, 1f,
+        0f, 0.4f, 1f, 0f, 0f
     )
 
     private val vertexData: FloatBuffer
+
+    private val projectionMatrix = FloatArray(16)
 
     init {
         vertexData = ByteBuffer
@@ -49,6 +52,7 @@ class AirHockeyRender : GLSurfaceView.Renderer{
     private var programId = 0
     private var aColorLocation = 0
     private var aPositionLocation = 0
+    private var uMatrixLocation = 0
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         Log.d(TAG, "onSurfaceCreated")
@@ -60,10 +64,12 @@ class AirHockeyRender : GLSurfaceView.Renderer{
         programId = GLUtil.createProgram(vertexShader, fragmentShader)
         // 使用该OpenGL程序
         glUseProgram(programId)
-        // 获取 attribute 位置
+        // 获取 attribute 属性变量
         aColorLocation = glGetAttribLocation(programId, A_COLOR)
-        // 获取 attribute 位置
+        // 获取 attribute 属性变量
         aPositionLocation = glGetAttribLocation(programId, A_POSITION)
+        // 获取 uniform 属性变量
+        uMatrixLocation = glGetUniformLocation(programId, U_MATRIX)
         // 把位置设置为数据的开头
         vertexData.position(0)
         // 关联属性与顶点数据的数组
@@ -81,12 +87,37 @@ class AirHockeyRender : GLSurfaceView.Renderer{
         Log.d(TAG, "viewport: $width, $height")
         // 设置窗口大小
         glViewport(0, 0, width, height)
+        val aspectRatio: Float = if (width > height) {
+            width.toFloat() / height
+        } else {
+            height.toFloat() / width
+        }
+        if (width > height) {
+//            Matrix.orthoM(projectionMatrix, 0, -aspectRatio, aspectRatio, -1f, 1f, -1f, 1f)
+            // 放大
+//            Matrix.orthoM(projectionMatrix, 0, -aspectRatio * 0.5f, aspectRatio * 0.5f, -1 * 0.5f, 1 * 0.5f, -1f, 1f)
+            // 缩小
+//            Matrix.orthoM(projectionMatrix, 0, -aspectRatio * 2f, aspectRatio * 2f, -1 * 2f, 1 * 2f, -1f, 1f)
+            // 移动 (下移)
+            Matrix.orthoM(projectionMatrix, 0, -aspectRatio, aspectRatio, -1f + 0.5f, 1f + 0.5f, -1f, 1f)
+        } else {
+//            Matrix.orthoM(projectionMatrix, 0, -1f, 1f, -aspectRatio, aspectRatio, -1f, 1f)
+//            Matrix.orthoM(projectionMatrix, 0, -1 * 0.5f, 1 * 0.5f, -aspectRatio * 0.5f, aspectRatio * 0.5f, -1f, 1f)
+//            Matrix.orthoM(projectionMatrix, 0, -1 * 2f, 1 * 2f, -aspectRatio * 2f, aspectRatio * 2f, -1f, 1f)
+            Matrix.orthoM(projectionMatrix, 0, -1f, 1f, -aspectRatio + 0.5f, aspectRatio + 0.5f, -1f, 1f)
+        }
+        // 移动投影矩阵
+//        Matrix.translateM(projectionMatrix, 0, 1f, 0f, 0f)
+        // 缩放投影矩阵
+//        Matrix.scaleM(projectionMatrix, 0, 1.5f, 1f, 0f)
     }
 
     override fun onDrawFrame(gl: GL10?) {
         Log.d(TAG, "onDrawFrame")
         // 清空屏幕
         glClear(GL_COLOR_BUFFER_BIT)
+        // 传递投影矩阵
+        glUniformMatrix4fv(uMatrixLocation, 1, false, projectionMatrix, 0)
         // 绘制三角形
         glDrawArrays(GL_TRIANGLE_FAN, 0, 6)
         // 绘制直线
@@ -106,6 +137,7 @@ class AirHockeyRender : GLSurfaceView.Renderer{
         // shader程序中的变量，需要完全对应
         private const val A_POSITION = "a_Position"
         private const val A_COLOR = "a_Color"
+        private const val U_MATRIX = "u_Matrix"
 
         private const val COLOR_COMPONENT_COUNT = 3
         private const val STRIDE = (POSITION_COMPONENT_COUNT + COLOR_COMPONENT_COUNT) * BYTES_PER_FLOAT

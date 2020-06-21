@@ -1,3 +1,4 @@
+include ':app:chapter4'
 include ':practicemodule'
 include ':app:chapter3'
 include ':app:chapter2'

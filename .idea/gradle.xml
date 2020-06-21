@@ -7,6 +7,7 @@
         <option name="testRunner" value="PLATFORM" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="gradleJvm" value="1.8" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
@@ -14,6 +15,7 @@
             <option value="$PROJECT_DIR$/app/chapter1" />
             <option value="$PROJECT_DIR$/app/chapter2" />
             <option value="$PROJECT_DIR$/app/chapter3" />
+            <option value="$PROJECT_DIR$/app/chapter4" />
             <option value="$PROJECT_DIR$/basemodule" />
             <option value="$PROJECT_DIR$/practicemodule" />
           </set>
